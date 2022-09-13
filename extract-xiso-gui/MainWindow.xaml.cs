@@ -22,7 +22,7 @@ namespace extract_xiso_gui
         string extractXISO;
 
         string xisoDL = "https://github.com/XboxDev/extract-xiso/releases/latest/download/extract-xiso-win32-release.zip";
-        string xisoDLBackup = "https://drive.google.com/uc?export=download&id=1JDYPLwchEzdQSw4k3omcefrL1ncZNeYM";
+        string xisoDLBackup = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/extract-xiso.exe";
         string xisoZip;
 
         string isoFilename;
@@ -33,6 +33,8 @@ namespace extract_xiso_gui
 
         string mainCMD;
         string finalCMD;
+
+        bool BackupDL;
 
         public MainWindow()
         {
@@ -138,12 +140,16 @@ namespace extract_xiso_gui
 
         private void DownloadXISOBackup()
         {
+            pb.Visibility = Visibility.Visible;
+
             try
             {
+                BackupDL = true;
+
                 WebClient webClient = new WebClient();
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadXISOComplete);
                 webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                webClient.DownloadFileAsync(new Uri(xisoDLBackup), xisoZip);
+                webClient.DownloadFileAsync(new Uri(xisoDLBackup), extractXISO);
             }
             catch (Exception ex)
             {
@@ -280,6 +286,21 @@ namespace extract_xiso_gui
 
         private void DownloadXISOComplete(object sender, AsyncCompletedEventArgs e)
         {
+            if (BackupDL == true)
+            {
+                pb.Visibility = Visibility.Hidden;
+                try
+                {
+                    Directory.Delete(xisoTemp, true);
+                    Directory.CreateDirectory(xisoTemp);
+                    return;
+                }
+                catch
+                {
+                    return;
+                }
+            }
+
             try
             {
                 ZipFile.ExtractToDirectory(xisoZip, xisoTemp);
