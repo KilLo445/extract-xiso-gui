@@ -11,7 +11,7 @@ namespace extract_xiso_gui
 {
     public partial class MainWindow : Window
     {
-        string guiVersion = "1.0.0";
+        string guiVersion = "1.0.1";
         string onlineVerLink = "https://pastebin.com/raw/nbvmxK7D";
         string updateDL = "https://github.com/KilLo445/extract-xiso-gui/releases/latest";
 
@@ -106,10 +106,6 @@ namespace extract_xiso_gui
                     Application.Current.Shutdown();
                 }
             }
-            else
-            {
-                return;
-            }
         }
 
         private void DownloadXISO()
@@ -176,6 +172,8 @@ namespace extract_xiso_gui
 
         private void GoBTN_Click(object sender, RoutedEventArgs e)
         {
+            CheckForXISO();
+            
             comboBoxSelection = ComboBox.Text;
 
             if (!File.Exists(isoFilename))
