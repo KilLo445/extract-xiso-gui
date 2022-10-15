@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         ContentRendered="Window_ContentRendered"
-        ResizeMode="CanResize"
+        ResizeMode="CanMinimize"
         Background="White"
         AllowsTransparency="False"
         Title="extract-xiso-gui" Height="450" Width="800">

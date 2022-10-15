@@ -11,7 +11,7 @@ namespace extract_xiso_gui
 {
     public partial class MainWindow : Window
     {
-        string guiVersion = "1.0.1";
+        string guiVersion = "1.0.2";
         string onlineVerLink = "https://pastebin.com/raw/nbvmxK7D";
         string updateDL = "https://github.com/KilLo445/extract-xiso-gui/releases/latest";
 
@@ -190,12 +190,6 @@ namespace extract_xiso_gui
                 }
             }
 
-            if (comboBoxSelection == null)
-            {
-                MessageBox.Show("Please select the mode you would like to run.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return;
-            }
-
             if (comboBoxSelection != null)
             {
                 if (comboBoxSelection == "List")
@@ -233,6 +227,7 @@ namespace extract_xiso_gui
                         return;
                     }
                 }
+
                 if (comboBoxSelection == "Extract")
                 {
                     xisoMode = "x";
@@ -332,6 +327,7 @@ namespace extract_xiso_gui
                 return;
             }
         }
+
         struct Version
         {
             internal static Version zero = new Version(0, 0, 0);
