@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -11,15 +12,17 @@ namespace extract_xiso_gui
 {
     public partial class MainWindow : Window
     {
-        string guiVersion = "1.0.2";
+        string guiVersion = "1.0.3";
         string onlineVerLink = "https://pastebin.com/raw/nbvmxK7D";
         string updateDL = "https://github.com/KilLo445/extract-xiso-gui/releases/latest";
+        string updaterDL = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/updater.exe";
 
         string rootPath;
         string tempPath;
         string xisoTemp;
         string xisoBat;
         string extractXISO;
+        string updater;
 
         string xisoDL = "https://github.com/XboxDev/extract-xiso/releases/latest/download/extract-xiso-win32-release.zip";
         string xisoDLBackup = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/extract-xiso.exe";
@@ -46,6 +49,8 @@ namespace extract_xiso_gui
             xisoBat = Path.Combine(xisoTemp, "extract-xiso-gui.bat");
             extractXISO = Path.Combine(rootPath, "extract-xiso.exe");
 
+            updater = Path.Combine(xisoTemp, "updater");
+
             xisoZip = Path.Combine(xisoTemp, "extract-xiso.zip");
 
             Directory.CreateDirectory(xisoTemp);
@@ -53,20 +58,36 @@ namespace extract_xiso_gui
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            RegistryKey keyA = Registry.CurrentUser.OpenSubKey(@"Software\KilLo\extract-xiso-gui", true);
+
+            if (keyA == null)
+            {
+                RegistryKey keyB = Registry.CurrentUser.OpenSubKey(@"Software", true);
+                keyB.CreateSubKey("KilLo");
+                keyB.Close();
+
+                RegistryKey keyC = Registry.CurrentUser.OpenSubKey(@"Software\KilLo", true);
+                keyC.CreateSubKey("extract-xiso-gui");
+                keyC.Close();
+
+                DumpPath();
+            }
+            else if (keyA != null)
+            {
+                DumpPath();
+            }
+
             CheckForUpdates();
             CheckForXISO();
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        private void DumpPath()
         {
-            try
-            {
-                Directory.Delete(xisoTemp, true);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error deleting temp.\n\n{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\KilLo\extract-xiso-gui", true);
+            key.SetValue("InstallPath", $"{rootPath}");
+            key.Close();
+
+            return;
         }
 
         private void CheckForUpdates()
@@ -80,11 +101,20 @@ namespace extract_xiso_gui
 
                 if (onlineVersion.IsDifferentThan(localVersion))
                 {
-                    MessageBoxResult updateGUI = MessageBox.Show("An update for extract-xiso-gui has been found.\n\nWould you like open the download page?", "Update found", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult updateGUI = MessageBox.Show("An update for extract-xiso-gui has been found.\n\nWould you like to download it?", "Update found", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (updateGUI == MessageBoxResult.Yes)
                     {
-                        Process.Start(updateDL);
-                        Application.Current.Shutdown();
+                        try
+                        {
+                            webClient.DownloadFile(new Uri(updaterDL), updater);
+                            Process.Start(updater);
+                            Application.Current.Shutdown();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"{ex}");
+                            return;
+                        }
                     }
                 }
             }
