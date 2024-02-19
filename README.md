@@ -13,7 +13,7 @@ List the file contents within an XISO file.
 
 ### Rewrite
 
-Rewrite filesystem structure of an XISO.
+Rewrite file system structure of an XISO.
 
 ### Extract
 
