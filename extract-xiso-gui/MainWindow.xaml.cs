@@ -51,7 +51,7 @@ namespace extract_xiso_gui
             xisoBat = Path.Combine(xisoTemp, "extract-xiso-gui.bat");
             extractXISO = Path.Combine(rootPath, "extract-xiso.exe");
 
-            updater = Path.Combine(xisoTemp, "updater");
+            updater = Path.Combine(xisoTemp, "updater.exe");
 
             xisoZip = Path.Combine(xisoTemp, "extract-xiso.zip");
 
