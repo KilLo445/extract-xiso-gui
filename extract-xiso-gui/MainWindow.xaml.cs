@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using WinForms = System.Windows.Forms;
 
@@ -12,8 +13,8 @@ namespace extract_xiso_gui
 {
     public partial class MainWindow : Window
     {
-        string guiVersion = "1.0.3";
-        string onlineVerLink = "https://pastebin.com/raw/nbvmxK7D";
+        string guiVersion = "1.0.4";
+        string onlineVerLink = "https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/master/extract-xiso-gui/version.txt";
         string updateDL = "https://github.com/KilLo445/extract-xiso-gui/releases/latest";
         string updaterDL = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/updater.exe";
 
@@ -35,9 +36,10 @@ namespace extract_xiso_gui
         string xisoMode;
 
         string mainCMD;
-        string finalCMD;
+        string[] finalCMD;
 
         bool BackupDL;
+        bool xisoRunning = false;
 
         public MainWindow()
         {
@@ -220,6 +222,12 @@ namespace extract_xiso_gui
                 }
             }
 
+            if (comboBoxSelection == null || comboBoxSelection == "")
+            {
+                MessageBox.Show("Please select a mode.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (comboBoxSelection != null)
             {
                 if (comboBoxSelection == "List")
@@ -242,7 +250,7 @@ namespace extract_xiso_gui
                         outputDir = Path.Combine(extractOutputDirDialog.SelectedPath);
                         Directory.CreateDirectory(outputDir);
 
-                        MessageBoxResult delISO = MessageBox.Show("Would you like to delete the original ISO after rewrite?", "Delete original ISO", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                        MessageBoxResult delISO = MessageBox.Show("Would you like to delete the original ISO after rewrite?", "Delete ISO", MessageBoxButton.YesNo, MessageBoxImage.Information);
                         if (delISO == MessageBoxResult.Yes)
                         {
                             mainCMD = $"\"{extractXISO}\" -D -d \"{outputDir}\" -r \"{isoFilename}\"";
@@ -288,9 +296,8 @@ namespace extract_xiso_gui
                             "pause",
                             "exit"
                           };
-                File.WriteAllLines(xisoBat, finalCMD);
-                Process.Start(xisoBat);
 
+                File.WriteAllLines(xisoBat, finalCMD);
                 if (xisoMode == "r" || xisoMode == "x")
                 {
                     MessageBoxResult openExtracted = MessageBox.Show("Would you like to open your output directory?", "", MessageBoxButton.YesNo, MessageBoxImage.Information);
@@ -299,6 +306,8 @@ namespace extract_xiso_gui
                         Process.Start(outputDir);
                     }
                 }
+                Process.Start(xisoBat);
+                return;
             }
         }
 
@@ -356,6 +365,15 @@ namespace extract_xiso_gui
             {
                 return;
             }
+        }
+
+        private void openGitHub_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start("https://github.com/KilLo445/extract-xiso-gui");
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         struct Version
