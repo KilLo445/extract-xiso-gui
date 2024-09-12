@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
-using System.Threading.Tasks;
 using System.Windows;
 using WinForms = System.Windows.Forms;
 
@@ -13,10 +12,9 @@ namespace extract_xiso_gui
 {
     public partial class MainWindow : Window
     {
-        string guiVersion = "1.0.4";
+        string guiVersion = "1.1.0";
         string onlineVerLink = "https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/master/extract-xiso-gui/version.txt";
         string updateDL = "https://github.com/KilLo445/extract-xiso-gui/releases/latest";
-        string updaterDL = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/updater.exe";
 
         string rootPath;
         string tempPath;
@@ -108,8 +106,7 @@ namespace extract_xiso_gui
                     {
                         try
                         {
-                            webClient.DownloadFile(new Uri(updaterDL), updater);
-                            Process.Start(updater);
+                            Process.Start(updateDL);
                             Application.Current.Shutdown();
                         }
                         catch (Exception ex)
@@ -134,7 +131,7 @@ namespace extract_xiso_gui
                 }
                 if (dlXISO == MessageBoxResult.No)
                 {
-                    MessageBox.Show("extract-xiso is required for extract-xiso-gui to run.\n\nReinstalling extract-xiso-gui may fix the issue.", "", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("extract-xiso is required for extract-xiso-gui to run.\n\nReinstalling extract-xiso-gui may fix the issue.", "extract-xiso not found", MessageBoxButton.OK, MessageBoxImage.Warning);
                     Application.Current.Shutdown();
                 }
             }
@@ -207,6 +204,18 @@ namespace extract_xiso_gui
             CheckForXISO();
             
             comboBoxSelection = ComboBox.Text;
+
+            if (comboBoxSelection == "Create")
+            {
+                try
+                {
+                    Create cWindow = new Create();
+                    this.Close();
+                    cWindow.Show();
+                    return;
+                }
+                catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+            }
 
             if (!File.Exists(isoFilename))
             {

@@ -21,6 +21,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0">
                 <ComboBox Name="ComboBox" IsEditable="False" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                    <ComboBoxItem Content="Create"/>
                     <ComboBoxItem Content="List"/>
                     <ComboBoxItem Content="Rewrite"/>
                     <ComboBoxItem Content="Extract"/>

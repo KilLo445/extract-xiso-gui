@@ -1,0 +1,34 @@
+﻿<Window x:Class="extract_xiso_gui.Create"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:extract_xiso_gui"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize"
+        Background="White"
+        AllowsTransparency="False"
+        Title="extract-xiso-gui" Height="400" Width="550">
+    <Grid>
+        <TextBlock Text="extract-xiso-gui" Foreground="Black" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="24" Height="32" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,35,0,0"/>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+            <TextBlock Text="Folder" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                <TextBox Name="FolderPath" Text="" HorizontalScrollBarVisibility="Visible" IsReadOnly="True" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18" TextWrapping="NoWrap" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"/>
+                <Button Name="fBrowseBTN" Content="Browse" Click="fBrowseBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            </StackPanel>
+            <TextBlock Text="ISO" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18" Margin="0,20,0,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                <TextBox Name="ISOPath" Text="" HorizontalScrollBarVisibility="Visible" IsReadOnly="True" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18" TextWrapping="NoWrap" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"/>
+                <Button Name="iBrowseBTN" Content="Browse" Click="iBrowseBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0">
+                <Button Name="GoBTN" Content="Go!" Click="GoBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Bold" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Button Name="goBack" Content="Go Back" Click="goBack_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="14" Width="100" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,30"/>
+    </Grid>
+</Window>
