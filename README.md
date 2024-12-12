@@ -24,8 +24,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![extract-xiso-gui Screenshot](https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/master/.github/App.png)  
-([video demo](https://youtu.be/CrVvFjI6kec))
+![extract-xiso-gui Screenshot](https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/refs/heads/master/.github/App.png)  
+<!-- ([video demo](https://youtu.be/CrVvFjI6kec)) -->
 
 Features:
 * Create
@@ -36,6 +36,11 @@ Features:
     * Rewrite file system structure of an XISO.
 * Extract
     * Extract XISO contents to a directory.
+* Additional options
+    * Delete old ISO after rewrite.
+    * Disable auto .xbe patching (Not recommended)
+    * Skip $SystemUpdate folder.
+
 
 ### Built With
 
@@ -55,7 +60,7 @@ Features:
 
 1. Head over to the [latest release](https://github.com/KilLo445/extract-xiso-gui/releases/latest)
 2. Download `extract-xiso-gui.zip`
-3. Extract somewhere safe
+3. Extract all files somewhere safe
 4. Run `extract-xiso-gui.exe`
 
 <!-- LICENSE -->
