@@ -10,27 +10,41 @@
         ResizeMode="CanMinimize"
         Background="White"
         AllowsTransparency="False"
-        Title="extract-xiso-gui" Height="350" Width="400">
+        Title="extract-xiso-gui" Height="500" Width="400">
     <Grid>
         <TextBlock Text="extract-xiso-gui" Foreground="Black" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="24" Height="32" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,35,0,0"/>
 
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
-                <TextBox Name="ISOPathBox" Text="" HorizontalScrollBarVisibility="Visible" IsReadOnly="True" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18" TextWrapping="NoWrap" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"/>
-                <Button Name="BrowseBTN" Content="Browse" Click="BrowseBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                <TextBlock Text="Folder" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18"/>
+                <StackPanel Name="FolderSelect" IsEnabled="False" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                    <TextBox Name="FolderPath" Text="" HorizontalScrollBarVisibility="Visible" IsReadOnly="True" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18" TextWrapping="NoWrap" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"/>
+                    <Button Name="fBrowseBTN" Content="Browse" Click="fBrowseBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                </StackPanel>
+                <TextBlock Text="ISO" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18" Margin="0,20,0,0"/>
+                <StackPanel Name="ISOSelect" IsEnabled="False" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                    <TextBox Name="ISOPath" Text="" HorizontalScrollBarVisibility="Visible" IsReadOnly="True" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="18" TextWrapping="NoWrap" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"/>
+                    <Button Name="iBrowseBTN" Content="Browse" Click="iBrowseBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0">
-                <ComboBox Name="ComboBox" IsEditable="False" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
-                    <ComboBoxItem Content="Create"/>
-                    <ComboBoxItem Content="List"/>
-                    <ComboBoxItem Content="Rewrite"/>
-                    <ComboBoxItem Content="Extract"/>
+                <ComboBox Name="ComboBox" SelectionChanged="ComboBox_SelectionChanged" IsEditable="False" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Regular" FontSize="22" Width="200" Height="50" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                    <ComboBoxItem Content="Create" Selected="ComboBoxItem_Create_Selected"/>
+                    <ComboBoxItem Content="List" Selected="ComboBoxItem_List_Selected"/>
+                    <ComboBoxItem Content="Rewrite" Selected="ComboBoxItem_Rewrite_Selected"/>
+                    <ComboBoxItem Content="Extract" Selected="ComboBoxItem_Extract_Selected"/>
                 </ComboBox>
-                <Button Name="GoBTN" Content="Go!" Click="GoBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Bold" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <Button Name="GoBTN" Content="Go!" IsEnabled="False"  Click="GoBTN_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Bold" FontSize="22" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
             </StackPanel>
         </StackPanel>
 
-        <Button Name="openGitHub" Content="Open GitHub" Click="openGitHub_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="14" Width="100" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50"/>
-        <ProgressBar Name="pb" Width="350" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" Visibility="Hidden"/>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60">
+            <CheckBox Name="DelOldISO" Content="Delete old ISO" ToolTip="Delete old xiso after processing." IsEnabled="False" IsChecked="False" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,5"/>
+            <CheckBox Name="DisAutoXBE" Content="Disable auto .xbe patching" ToolTip="Disable automatic .xbe media enable patching (not recommended)." IsEnabled="False" IsChecked="False" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0"/>
+            <CheckBox Name="SkipSysUpdate" Content="Skip $SystemUpdate" ToolTip="Skip $SystemUpdate folder." IsEnabled="False" IsChecked="False" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <Button Name="openGitHub" Content="Open GitHub" Click="openGitHub_Click" FontFamily="/Fonts/Roboto/#Roboto" FontWeight="Light" FontSize="14" Width="100" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+        <ProgressBar Name="pb" Width="350" Height="10" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5" Visibility="Hidden"/>
     </Grid>
 </Window>
