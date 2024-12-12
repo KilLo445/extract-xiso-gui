@@ -38,7 +38,7 @@ Features:
     * Extract XISO contents to a directory.
 * Additional options
     * Delete old ISO after rewrite.
-    * Disable auto .xbe patching (Not recommended)
+    * Disable auto .xbe patching (Not recommended).
     * Skip $SystemUpdate folder.
 
 
