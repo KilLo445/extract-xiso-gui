@@ -64,9 +64,9 @@ Features:
 4. Run `extract-xiso-gui.exe`
 
 <!-- LICENSE -->
-<!-- ## License
+ ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information. -->
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
