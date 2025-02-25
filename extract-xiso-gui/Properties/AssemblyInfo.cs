@@ -6,7 +6,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("extract-xiso-gui")]
-[assembly: AssemblyDescription("extract-xiso-gui")]
+[assembly: AssemblyDescription("Easily manage XISOs")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KilLo")]
 [assembly: AssemblyProduct("extract-xiso-gui")]

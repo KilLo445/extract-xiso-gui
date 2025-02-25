@@ -1,0 +1,30 @@
+﻿<Window x:Class="extract_xiso_gui.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:extract_xiso_gui"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Background="Black"
+        ResizeMode="NoResize"
+        Title="About" Height="500" Width="500">
+    <Grid>
+        <Image Source="/Images/XboxBG2.jpg" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.35"/>
+
+        <TextBlock Text="About" Foreground="White" FontFamily="/Fonts/Roboto/#Roboto" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0"/>
+        
+        <TextBlock Width="250" TextAlignment="Center" TextWrapping="Wrap"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"
+                   Text="extract-xiso-gui is a GUI for the command-line utility extract-xiso. You can rewrite, extract, and create XISOs for use in emulators or for extracing game files. This tool works for original Xbox games aswell as Xbox 360."
+                   Background="Transparent"
+                   Foreground="White"
+                   FontSize="16"
+                   FontFamily="/Fonts/Roboto/#Roboto"
+                   FontWeight="Regular"/>
+
+        <Image Source="/Images/GitHub/GitHub_Logo_White.png" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="OpenGitHub" Margin="0,0,0,50"/>
+
+        <TextBlock Name="VersionText" Text="v1.0.0" Foreground="White" Opacity="0.4" FontFamily="/Fonts/Roboto/#Roboto" FontSize="16" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+    </Grid>
+</Window>

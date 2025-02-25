@@ -1,8 +1,10 @@
 <a name="readme-top"></a>
-
-<br />
 <div align="center">
-
+<a href="https://github.com/KilLo445/extract-xiso-gui">
+    <img src="https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/refs/heads/master/extract-xiso-gui/Images/Xbox.png" alt="Logo" width=300>
+    <br />
+    <br />
+  </a>
   <p align="center">
     <h1>extract-xiso-gui</h1>
     <br />
@@ -59,6 +61,12 @@ Features:
 ### Installation
 
 1. Head over to the [latest release](https://github.com/KilLo445/extract-xiso-gui/releases/latest)
+2. Download `extract-xiso-gui.Installer.exe`
+3. Run and follow setup instructions
+
+### Installation (Portable)
+
+1. Head over to the [latest release](https://github.com/KilLo445/extract-xiso-gui/releases/latest)
 2. Download `extract-xiso-gui.zip`
 3. Extract all files somewhere safe
 4. Run `extract-xiso-gui.exe`
@@ -66,16 +74,17 @@ Features:
 <!-- LICENSE -->
  ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 ## Contact
 
 - Discord
-    - @decentloser / DecentLoser#7263
-    - [My Server](https://discord.gg/66qymzdtMw) (Preferred)
+  - @decentloser / [Server](https://discord.gg/66qymzdtMw)
 - Twitter / X
   - [@KilLo445](https://twitter.com/KilLo445)
+- More
+  - [My Links](https://killo.club/links)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -86,7 +95,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 [issues-shield]: https://img.shields.io/github/issues/KilLo445/extract-xiso-gui.svg?style=for-the-badge
 [issues-url]: https://github.com/KilLo445/extract-xiso-gui/issues
 [.NET]: https://img.shields.io/badge/.NET_Framework-5C2D91?style=for-the-badge&logo=.net&logoColor=white
-[Framework]: https://img.shields.io/badge/.NET_Framework-4.8-purple
 [framework-url]: https://dotnet.microsoft.com/en-us/download/dotnet-framework
 
 <!-- README Template -->

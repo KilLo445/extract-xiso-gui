@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="CloseButton" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="FontFamily" Value="/Fonts/Roboto/#Roboto"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="DarkGray"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
