@@ -126,6 +126,7 @@ namespace extract_xiso_gui
 
         private void CreateReg()
         {
+            // I had planned to do something with registry, such as storing settings, and then I didn't end up adding any settings, so after v2.0.0, this will not be called anymore
             RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software", true);
             key = key.CreateSubKey(@"KilLo\extract-xiso-gui");
             key.SetValue("Version", $"{guiVersion}");
@@ -286,8 +287,9 @@ namespace extract_xiso_gui
         {
             WinForms.FolderBrowserDialog folderDLG = new WinForms.FolderBrowserDialog();
             folderDLG.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
-            if (!isInput) { folderDLG.Description = "Please select your output folder."; folderDLG.ShowNewFolderButton = true; }
-            else { folderDLG.ShowNewFolderButton = true; }
+            folderDLG.ShowNewFolderButton = true;
+            if (!isInput) { folderDLG.Description = "Please select your output folder."; }
+            else { folderDLG.Description = "Please select your input folder."; }
             WinForms.DialogResult folderResult = folderDLG.ShowDialog();
             if (folderResult == WinForms.DialogResult.OK)
             {
