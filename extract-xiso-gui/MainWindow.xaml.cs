@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Windows;
-using Microsoft.Win32;
 using System.Diagnostics;
 using System.Net;
 using System.IO;
 using System.ComponentModel;
 using WinForms = System.Windows.Forms;
-using System.Threading;
+using Microsoft.Win32;
 
 namespace extract_xiso_gui
 {
@@ -23,13 +22,14 @@ namespace extract_xiso_gui
     public partial class MainWindow : Window
     {
         // Info + links
-        public static string guiVersion = "2.0.0";
+        public static string guiVersion = "2.0.1";
         public static string githubLink = "https://github.com/KilLo445/extract-xiso-gui";
         string verLink = "https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/master/extract-xiso-gui/version.txt";
         string xisoDL = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/extract-xiso.exe";
 
         // Paths and files
         string rootPath;
+        string xisoTemp;
         string xisoBat;
         string eXISO;
 
@@ -108,14 +108,15 @@ namespace extract_xiso_gui
             InitializeComponent();
 
             rootPath = Directory.GetCurrentDirectory();
-            xisoBat = Path.Combine(Path.GetTempPath(), "extract-xiso-gui", "extract-xiso-gui.bat");
+            xisoTemp = Path.Combine(Path.GetTempPath(), "extract-xiso-gui");
+            xisoBat = Path.Combine(xisoTemp, "extract-xiso-gui.bat");
             eXISO = Path.Combine(rootPath, "extract-xiso.exe");
 
             if (File.Exists(Path.Combine(rootPath, "suppress-updates.txt"))) { suppressUpdates = true; }
 
             Status = SelectedMode.none;
 
-            CreateReg();
+            // CreateReg();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -147,12 +148,8 @@ namespace extract_xiso_gui
                     MessageBoxResult updateGUI = MessageBox.Show("An update for extract-xiso-gui has been found.\n\nWould you like to download it?", "Update available!", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (updateGUI == MessageBoxResult.Yes)
                     {
-                        try
-                        {
-                            Process.Start(githubLink + "/releases/latest");
-                            Application.Current.Shutdown();
-                        }
-                        catch (Exception ex) { DisplayErrorMessage(ex); }
+                        Process.Start(githubLink + "/releases/latest");
+                        Application.Current.Shutdown();
                     }
                 }
 
@@ -196,125 +193,157 @@ namespace extract_xiso_gui
 
         private void SelectedMode_Changed(object sender, RoutedEventArgs e)
         {
-            if (rbCreate.IsChecked == true) { Status = SelectedMode.create; }
-            if (rbList.IsChecked == true) { Status = SelectedMode.list; }
-            if (rbRewrite.IsChecked == true) { Status = SelectedMode.rewrite; }
-            if (rbExtract.IsChecked == true) { Status = SelectedMode.extract; }
+            try
+            {
+                if (rbCreate.IsChecked == true) { Status = SelectedMode.create; }
+                if (rbList.IsChecked == true) { Status = SelectedMode.list; }
+                if (rbRewrite.IsChecked == true) { Status = SelectedMode.rewrite; }
+                if (rbExtract.IsChecked == true) { Status = SelectedMode.extract; }
+            }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void InputBrowse_Click(object sender, RoutedEventArgs e)
         {
-            if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
-            if (Status == SelectedMode.create) { BrowseForFolder(true); }
-            if (Status == SelectedMode.list) { BrowseForISO(true); }
-            if (Status == SelectedMode.rewrite) { BrowseForISO(true); }
-            if (Status == SelectedMode.extract) { BrowseForISO(true); }
+            try
+            {
+                if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
+                if (Status == SelectedMode.create) { BrowseForFolder(true); }
+                if (Status == SelectedMode.list) { BrowseForISO(true); }
+                if (Status == SelectedMode.rewrite) { BrowseForISO(true); }
+                if (Status == SelectedMode.extract) { BrowseForISO(true); }
+            }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void OutputBrowse_Click(object sender, RoutedEventArgs e)
         {
-            if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
-            if (Status == SelectedMode.create) { SaveISO(false); }
-            if (Status == SelectedMode.rewrite) { BrowseForFolder(false); }
-            if (Status == SelectedMode.extract) { BrowseForFolder(false); }
+            try
+            {
+                if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
+                if (Status == SelectedMode.create) { SaveISO(false); }
+                if (Status == SelectedMode.rewrite) { BrowseForFolder(false); }
+                if (Status == SelectedMode.extract) { BrowseForFolder(false); }
+            }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void GoBTN_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedInput == null) { MessageBox.Show("Please select an input.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-            if (selectedOutput == null) { MessageBox.Show("Please select an output.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-            Directory.Delete(Path.Combine(Path.GetTempPath(), "extract-xiso-gui"), true);
-            string delISO = "";
-            string disXBE = "";
-            string skipSys = "";
-            if (cbDelISO.IsChecked == true) { delISO = "-D"; }
-            if (cbAutoXBE.IsChecked == true) { disXBE = "-m"; }
-            if (cbSkipSys.IsChecked == true) { skipSys = "-s"; }
-
-            if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
-            if (Status == SelectedMode.create) { RunXISO($"\"{eXISO}\"" + $" {disXBE}" + $" -c \"{selectedInput}\" \"{selectedOutput}\""); }
-            if (Status == SelectedMode.list) { RunXISO($"\"{eXISO}\" -l \"{selectedInput}\""); }
-            if (Status == SelectedMode.rewrite) { RunXISO($"\"{eXISO}\"" + $" {delISO} {disXBE} {skipSys}" + $" -d \"{selectedOutput}\" " + $" -r {selectedInput}"); }
-            if (Status == SelectedMode.extract) { string iso = Path.GetFileNameWithoutExtension(selectedInput); RunXISO($"\"{eXISO}\"" + $" {skipSys}" + $" -d \"{selectedOutput}\\{iso}\" " + $" -x \"{selectedInput}\""); }
+            try
+            {
+                if (selectedInput == null) { MessageBox.Show("Please select an input.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                if (selectedOutput == null) { MessageBox.Show("Please select an output.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                if (Directory.Exists(xisoTemp)) { Directory.Delete(Path.Combine(xisoTemp), true); }
+                Directory.CreateDirectory(xisoTemp);
+                string delISO = "";
+                string disXBE = "";
+                string skipSys = "";
+                if (cbDelISO.IsChecked == true) { delISO = "-D"; }
+                if (cbAutoXBE.IsChecked == true) { disXBE = "-m"; }
+                if (cbSkipSys.IsChecked == true) { skipSys = "-s"; }
+                if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
+                if (Status == SelectedMode.create) { RunXISO($"\"{eXISO}\"" + $" {disXBE}" + $" -c \"{selectedInput}\" \"{selectedOutput}\""); }
+                if (Status == SelectedMode.list) { RunXISO($"\"{eXISO}\" -l \"{selectedInput}\""); }
+                if (Status == SelectedMode.rewrite) { RunXISO($"\"{eXISO}\"" + $" {delISO} {disXBE} {skipSys}" + $" -d \"{selectedOutput}\" " + $" -r {selectedInput}"); }
+                if (Status == SelectedMode.extract) { string iso = Path.GetFileNameWithoutExtension(selectedInput); RunXISO($"\"{eXISO}\"" + $" {skipSys}" + $" -d \"{selectedOutput}\\{iso}\" " + $" -x \"{selectedInput}\""); }
+            }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void BrowseForISO(bool isInput)
         {
-            var isoDLG = new Microsoft.Win32.OpenFileDialog();
-            isoDLG.CheckFileExists = true;
-            if (Status == SelectedMode.rewrite) { isoDLG.Multiselect = true; }
-            else { isoDLG.Multiselect = false; }
-            isoDLG.Filter = "Disc Images|*.iso";
-            bool? isoResult = isoDLG.ShowDialog();
-            if (isoResult == true)
+            try
             {
-                if (isoDLG.Multiselect == true)
+                var isoDLG = new Microsoft.Win32.OpenFileDialog();
+                isoDLG.CheckFileExists = true;
+                if (Status == SelectedMode.rewrite) { isoDLG.Multiselect = true; }
+                else { isoDLG.Multiselect = false; }
+                isoDLG.Filter = "Disc Images|*.iso";
+                bool? isoResult = isoDLG.ShowDialog();
+                if (isoResult == true)
                 {
-                    isBatch = true;
-                    string iso = null;
-                    string isoClean = null;
-                    foreach (String file in isoDLG.FileNames)
+                    if (isoDLG.Multiselect == true)
                     {
-                        iso = iso + " " + $"\"{file}\"";
-                        isoClean = isoClean + " " + $"{file}";
+                        isBatch = true;
+                        string iso = null;
+                        string isoClean = null;
+                        foreach (String file in isoDLG.FileNames)
+                        {
+                            iso = iso + " " + $"\"{file}\"";
+                            isoClean = isoClean + " " + $"{file}";
+                        }
+                        InputPath.Text = isoClean; selectedInput = iso;
                     }
-                    InputPath.Text = isoClean; selectedInput = iso;
-                }
-                else
-                {
-                    isBatch = false;
-                    if (isInput) { InputPath.Text = isoDLG.FileName; selectedInput = isoDLG.FileName; }
-                    else { OutputPath.Text = isoDLG.FileName; selectedOutput = isoDLG.FileName; }
+                    else
+                    {
+                        isBatch = false;
+                        if (isInput) { InputPath.Text = isoDLG.FileName; selectedInput = isoDLG.FileName; }
+                        else { OutputPath.Text = isoDLG.FileName; selectedOutput = isoDLG.FileName; }
+                    }
                 }
             }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void SaveISO(bool isInput)
         {
-            Microsoft.Win32.SaveFileDialog isoDLGs = new Microsoft.Win32.SaveFileDialog();
-            isoDLGs.FileName = "MyXISO";
-            isoDLGs.DefaultExt = ".iso";
-            isoDLGs.Filter = "Disc Images|*.iso";
-            Nullable<bool> isoResultS = isoDLGs.ShowDialog();
-            if (isoResultS == true)
+            try
             {
-                if (isInput) { InputPath.Text = isoDLGs.FileName; selectedInput = isoDLGs.FileName; }
-                else { OutputPath.Text = isoDLGs.FileName; selectedOutput = isoDLGs.FileName; }
+                Microsoft.Win32.SaveFileDialog isoDLGs = new Microsoft.Win32.SaveFileDialog();
+                isoDLGs.FileName = "MyXISO";
+                isoDLGs.DefaultExt = ".iso";
+                isoDLGs.Filter = "Disc Images|*.iso";
+                Nullable<bool> isoResultS = isoDLGs.ShowDialog();
+                if (isoResultS == true)
+                {
+                    if (isInput) { InputPath.Text = isoDLGs.FileName; selectedInput = isoDLGs.FileName; }
+                    else { OutputPath.Text = isoDLGs.FileName; selectedOutput = isoDLGs.FileName; }
+                }
             }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void BrowseForFolder(bool isInput)
         {
-            WinForms.FolderBrowserDialog folderDLG = new WinForms.FolderBrowserDialog();
-            folderDLG.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
-            folderDLG.ShowNewFolderButton = true;
-            if (!isInput) { folderDLG.Description = "Please select your output folder."; }
-            else { folderDLG.Description = "Please select your input folder."; }
-            WinForms.DialogResult folderResult = folderDLG.ShowDialog();
-            if (folderResult == WinForms.DialogResult.OK)
+            try
             {
-                if (isInput) { InputPath.Text = folderDLG.SelectedPath; selectedInput = folderDLG.SelectedPath; }
-                else { OutputPath.Text = folderDLG.SelectedPath; selectedOutput = folderDLG.SelectedPath; }
+                WinForms.FolderBrowserDialog folderDLG = new WinForms.FolderBrowserDialog();
+                folderDLG.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
+                folderDLG.ShowNewFolderButton = true;
+                if (!isInput) { folderDLG.Description = "Please select your output folder."; }
+                else { folderDLG.Description = "Please select your input folder."; }
+                WinForms.DialogResult folderResult = folderDLG.ShowDialog();
+                if (folderResult == WinForms.DialogResult.OK)
+                {
+                    if (isInput) { InputPath.Text = folderDLG.SelectedPath; selectedInput = folderDLG.SelectedPath; }
+                    else { OutputPath.Text = folderDLG.SelectedPath; selectedOutput = folderDLG.SelectedPath; }
+                }
             }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void RunXISO(string cmd)
         {
-            string[] finalCMD ={
+            try
+            {
+                string[] finalCMD ={
                             "@echo off",
                             "title extract-xiso",
                             $"{cmd}",
                             "pause",
                             "exit"
                           };
-            File.WriteAllLines(xisoBat, finalCMD);
-            if (Status == SelectedMode.create || Status == SelectedMode.rewrite || Status == SelectedMode.extract)
-            {
-                MessageBoxResult openOutput = MessageBox.Show("Would you like to open your output directory?", "extract-xiso-gui", MessageBoxButton.YesNo, MessageBoxImage.Information);
-                if (openOutput == MessageBoxResult.Yes) { Process.Start(selectedOutput); }
+                File.WriteAllLines(xisoBat, finalCMD);
+                if (Status == SelectedMode.create || Status == SelectedMode.rewrite || Status == SelectedMode.extract)
+                {
+                    MessageBoxResult openOutput = MessageBox.Show("Would you like to open your output directory?", "extract-xiso-gui", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    if (openOutput == MessageBoxResult.Yes) { Process.Start(selectedOutput); }
+                }
+                Process.Start(xisoBat);
+                return;
             }
-            Process.Start(xisoBat);
-            return;
+            catch (Exception ex) { DisplayErrorMessage(ex); }
         }
 
         private void OpenAbout(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -323,25 +352,46 @@ namespace extract_xiso_gui
             aboutWindow.Show();
         }
 
-        private void DragWindow(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
-
-        private void MinimizeButton_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
+        private void MinimizeButton_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) { this.WindowState = WindowState.Minimized; }
 
         private void CloseButton_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            try
+            {
+                if (Directory.Exists(xisoTemp)) { Directory.Delete(Path.Combine(xisoTemp), true); }
+                if (File.Exists(Path.Combine(rootPath, "error.txt")))
+                {
+                    MessageBoxResult delErrDmp = MessageBox.Show($"An error dump was detected!\n\nWould you like to delete it?\n\n{Path.Combine(rootPath, "error.txt")}", "Error dump detected!", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (delErrDmp == MessageBoxResult.Yes) { try { File.Delete(Path.Combine(rootPath, "error.txt")); } catch (Exception ex) { DisplayErrorMessage(ex); } }
+                }
+            }
+            catch { }
+
             Application.Current.Shutdown();
         }
 
         private void DisplayErrorMessage(Exception ex)
         {
             MessageBox.Show($"{ex}", "An error occured!", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBoxResult saveError = MessageBox.Show("Would you like to save the error to a file?", "Save error?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (saveError == MessageBoxResult.Yes) { SaveError(ex); }
+            return;
         }
+
+        private void SaveError(Exception ex)
+        {
+            string[] err ={
+                            "An error occured!",
+                            "extract-xiso-gui",
+                            $"Version: {guiVersion}",
+                            "",
+                            $"{ex}"
+                          };
+            File.WriteAllLines(Path.Combine(rootPath, "error.txt"), err);
+            Process.Start(Path.Combine(rootPath, "error.txt"));
+        }
+
+        private void DragWindow(object sender, System.Windows.Input.MouseButtonEventArgs e) { DragMove(); }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e) { pb.Value = e.ProgressPercentage; }
 
