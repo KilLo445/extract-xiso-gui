@@ -22,7 +22,7 @@
   [![Stargazers][stars-shield]][stars-url]
   [![Issues][issues-shield]][issues-url]
   <br />
-  [![Downloads][dl-shield]][issues-url]
+  [![Downloads][dl-shield]][latest]
 </div>
 
 <!-- ABOUT THE PROJECT -->
@@ -110,6 +110,7 @@ Links for all images used in extract-xiso-gui
 [.NET]: https://img.shields.io/badge/.NET_Framework-5C2D91?style=for-the-badge&logo=.net&logoColor=white
 [framework-url]: https://dotnet.microsoft.com/en-us/download/dotnet-framework
 [dl-shield]: https://img.shields.io/github/downloads/KilLo445/extract-xiso-gui/total?style=for-the-badge&label=Downloads&color=2E3440
+[latest]: https://github.com/KilLo445/extract-xiso-gui/releases/latest
 
 <!-- README Template -->
 <!-- https://github.com/othneildrew/Best-README-Template -->
