@@ -22,7 +22,7 @@ namespace extract_xiso_gui
     public partial class MainWindow : Window
     {
         // Info + links
-        public static string guiVersion = "2.0.1";
+        public static string guiVersion = "2.0.2";
         public static string githubLink = "https://github.com/KilLo445/extract-xiso-gui";
         string verLink = "https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/master/extract-xiso-gui/version.txt";
         string xisoDL = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/extract-xiso.exe";
@@ -155,7 +155,14 @@ namespace extract_xiso_gui
 
                 return;
             }
-            catch (Exception ex) { DisplayErrorMessage(ex); }
+            catch (Exception ex)
+            {
+                MessageBoxResult updateFailed = MessageBox.Show("There was a problem checking for updates.\n\nWould you like to open the GitHub page?", "Update failed!", MessageBoxButton.YesNo, MessageBoxImage.Error);
+                if (updateFailed == MessageBoxResult.Yes)
+                {
+                    Process.Start(githubLink);
+                }
+            }
         }
 
         private void CheckForXISO()
@@ -195,6 +202,8 @@ namespace extract_xiso_gui
         {
             try
             {
+                InputPath.Text = string.Empty;
+                OutputPath.Text = string.Empty;
                 if (rbCreate.IsChecked == true) { Status = SelectedMode.create; }
                 if (rbList.IsChecked == true) { Status = SelectedMode.list; }
                 if (rbRewrite.IsChecked == true) { Status = SelectedMode.rewrite; }
@@ -233,7 +242,7 @@ namespace extract_xiso_gui
             try
             {
                 if (selectedInput == null) { MessageBox.Show("Please select an input.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-                if (selectedOutput == null) { MessageBox.Show("Please select an output.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                if (selectedOutput == null && Status != SelectedMode.list) { MessageBox.Show("Please select an output.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error); return; }
                 if (Directory.Exists(xisoTemp)) { Directory.Delete(Path.Combine(xisoTemp), true); }
                 Directory.CreateDirectory(xisoTemp);
                 string delISO = "";

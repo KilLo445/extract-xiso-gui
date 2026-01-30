@@ -25,6 +25,8 @@
 
         <Image Source="/Images/GitHub/GitHub_Logo_White.png" Width="150" VerticalAlignment="Bottom" HorizontalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="OpenGitHub" Margin="0,0,0,50"/>
 
+        <CheckBox Name="cbEnableUpdates" Content="Enable updates" ToolTip="Enable/disable checking for updates on startup." Checked="cbEnableUpdates_Checked" Unchecked="cbEnableUpdates_Unchecked" VerticalAlignment="Bottom" Foreground="White" Margin="10,0,0,10"/>
+        
         <TextBlock Name="VersionText" Text="v1.0.0" Foreground="White" Opacity="0.4" FontFamily="/Fonts/Roboto/#Roboto" FontSize="16" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
     </Grid>
 </Window>
