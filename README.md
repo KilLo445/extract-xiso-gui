@@ -93,7 +93,7 @@ Links for all images used in extract-xiso-gui
 ## Contact
 
 - Discord
-  - @decentloser / [Server](https://discord.gg/66qymzdtMw)
+  - @killo445 / [Server](https://discord.gg/66qymzdtMw)
 - Twitter / X
   - [@KilLo445](https://twitter.com/KilLo445)
 - More
