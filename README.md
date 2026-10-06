@@ -44,11 +44,22 @@ Features:
     * Delete old ISO after rewrite.
     * Disable auto .xbe patching (Not recommended).
     * Skip $SystemUpdate folder.
+* Batch
+    * Scan a folder (including subfolders) for .iso files and process them one by one.
 
 
 ### Built With
 
 * [![.NET][.NET]][framework-url]
+
+<!-- CHANGELOG -->
+## Changelog
+
+### v2.1.0
+* New: Batch mode
+    * Check `Batch (scan folder + subfolders)` and point Input to a folder: every `.iso` is found recursively and processed one by one.
+    * Works in all modes: Extract (one subfolder per ISO), Rewrite, List, and Create (one ISO per subfolder).
+* Credits: batch mode by [@bvlxtelli](https://github.com/bvlxtelli)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -98,6 +109,10 @@ Links for all images used in extract-xiso-gui
   - [@KilLo445](https://twitter.com/KilLo445)
 - More
   - [My Links](https://killo.club/links)
+
+## Credits
+
+- Batch mode by [@bvlxtelli](https://github.com/bvlxtelli)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

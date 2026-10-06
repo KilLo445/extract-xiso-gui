@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Diagnostics;
 using System.Net;
@@ -22,7 +24,7 @@ namespace extract_xiso_gui
     public partial class MainWindow : Window
     {
         // Info + links
-        public static string guiVersion = "2.0.2";
+        public static string guiVersion = "2.1.0";
         public static string githubLink = "https://github.com/KilLo445/extract-xiso-gui";
         string verLink = "https://raw.githubusercontent.com/KilLo445/extract-xiso-gui/master/extract-xiso-gui/version.txt";
         string xisoDL = "https://github.com/KilLo445/extract-xiso-gui/raw/master/extract-xiso-gui/extract-xiso.exe";
@@ -50,6 +52,7 @@ namespace extract_xiso_gui
                 switch (_status)
                 {
                     case SelectedMode.none:
+                        cbBatch.IsEnabled = false; cbBatch.Opacity = 0.2;
                         cbDelISO.IsEnabled = false; cbDelISO.Opacity = 0.2;
                         cbAutoXBE.IsEnabled = false; cbAutoXBE.Opacity = 0.2;
                         cbSkipSys.IsEnabled = false; cbSkipSys.Opacity = 0.2;
@@ -60,6 +63,7 @@ namespace extract_xiso_gui
                         GoBTN.IsEnabled = false; GoBTN.Opacity = 0.2;
                         break;
                     case SelectedMode.create:
+                        cbBatch.IsEnabled = true; cbBatch.Opacity = 1;
                         cbDelISO.IsEnabled = false; cbDelISO.Opacity = 0.2;
                         cbAutoXBE.IsEnabled = true; cbAutoXBE.Opacity = 1;
                         cbSkipSys.IsEnabled = false; cbSkipSys.Opacity = 0.2;
@@ -70,6 +74,7 @@ namespace extract_xiso_gui
                         GoBTN.IsEnabled = true; GoBTN.Opacity = 1;
                         break;
                     case SelectedMode.list:
+                        cbBatch.IsEnabled = true; cbBatch.Opacity = 1;
                         cbDelISO.IsEnabled = false; cbDelISO.Opacity = 0.2;
                         cbAutoXBE.IsEnabled = false; cbAutoXBE.Opacity = 0.2;
                         cbSkipSys.IsEnabled = false; cbSkipSys.Opacity = 0.2;
@@ -80,6 +85,7 @@ namespace extract_xiso_gui
                         GoBTN.IsEnabled = true; GoBTN.Opacity = 1;
                         break;
                     case SelectedMode.rewrite:
+                        cbBatch.IsEnabled = true; cbBatch.Opacity = 1;
                         cbDelISO.IsEnabled = true; cbDelISO.Opacity = 1;
                         cbAutoXBE.IsEnabled = true; cbAutoXBE.Opacity = 1;
                         cbSkipSys.IsEnabled = true; cbSkipSys.Opacity = 1;
@@ -90,6 +96,7 @@ namespace extract_xiso_gui
                         GoBTN.IsEnabled = true; GoBTN.Opacity = 1;
                         break;
                     case SelectedMode.extract:
+                        cbBatch.IsEnabled = true; cbBatch.Opacity = 1;
                         cbDelISO.IsEnabled = false; cbDelISO.Opacity = 0.2;
                         cbAutoXBE.IsEnabled = false; cbAutoXBE.Opacity = 0.2;
                         cbSkipSys.IsEnabled = true; cbSkipSys.Opacity = 1;
@@ -204,10 +211,32 @@ namespace extract_xiso_gui
             {
                 InputPath.Text = string.Empty;
                 OutputPath.Text = string.Empty;
+                selectedInput = null;
+                selectedOutput = null;
+                isBatch = false;
                 if (rbCreate.IsChecked == true) { Status = SelectedMode.create; }
                 if (rbList.IsChecked == true) { Status = SelectedMode.list; }
                 if (rbRewrite.IsChecked == true) { Status = SelectedMode.rewrite; }
                 if (rbExtract.IsChecked == true) { Status = SelectedMode.extract; }
+            }
+            catch (Exception ex) { DisplayErrorMessage(ex); }
+        }
+
+        private bool IsBatchMode()
+        {
+            return cbBatch != null && cbBatch.IsChecked == true;
+        }
+
+        private void BatchMode_Changed(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Trocar entre arquivo/pasta invalida a selecao anterior.
+                InputPath.Text = string.Empty;
+                OutputPath.Text = string.Empty;
+                selectedInput = null;
+                selectedOutput = null;
+                isBatch = false;
             }
             catch (Exception ex) { DisplayErrorMessage(ex); }
         }
@@ -218,9 +247,9 @@ namespace extract_xiso_gui
             {
                 if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
                 if (Status == SelectedMode.create) { BrowseForFolder(true); }
-                if (Status == SelectedMode.list) { BrowseForISO(true); }
-                if (Status == SelectedMode.rewrite) { BrowseForISO(true); }
-                if (Status == SelectedMode.extract) { BrowseForISO(true); }
+                if (Status == SelectedMode.list) { if (IsBatchMode()) { BrowseForFolder(true); } else { BrowseForISO(true); } }
+                if (Status == SelectedMode.rewrite) { if (IsBatchMode()) { BrowseForFolder(true); } else { BrowseForISO(true); } }
+                if (Status == SelectedMode.extract) { if (IsBatchMode()) { BrowseForFolder(true); } else { BrowseForISO(true); } }
             }
             catch (Exception ex) { DisplayErrorMessage(ex); }
         }
@@ -230,7 +259,7 @@ namespace extract_xiso_gui
             try
             {
                 if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
-                if (Status == SelectedMode.create) { SaveISO(false); }
+                if (Status == SelectedMode.create) { if (IsBatchMode()) { BrowseForFolder(false); } else { SaveISO(false); } }
                 if (Status == SelectedMode.rewrite) { BrowseForFolder(false); }
                 if (Status == SelectedMode.extract) { BrowseForFolder(false); }
             }
@@ -252,12 +281,143 @@ namespace extract_xiso_gui
                 if (cbAutoXBE.IsChecked == true) { disXBE = "-m"; }
                 if (cbSkipSys.IsChecked == true) { skipSys = "-s"; }
                 if (Status == SelectedMode.none) { MessageBox.Show("Please select a mode.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
+                if (IsBatchMode())
+                {
+                    RunBatch(delISO, disXBE, skipSys);
+                    return;
+                }
                 if (Status == SelectedMode.create) { RunXISO($"\"{eXISO}\"" + $" {disXBE}" + $" -c \"{selectedInput}\" \"{selectedOutput}\""); }
                 if (Status == SelectedMode.list) { RunXISO($"\"{eXISO}\" -l \"{selectedInput}\""); }
                 if (Status == SelectedMode.rewrite) { RunXISO($"\"{eXISO}\"" + $" {delISO} {disXBE} {skipSys}" + $" -d \"{selectedOutput}\" " + $" -r {selectedInput}"); }
                 if (Status == SelectedMode.extract) { string iso = Path.GetFileNameWithoutExtension(selectedInput); RunXISO($"\"{eXISO}\"" + $" {skipSys}" + $" -d \"{selectedOutput}\\{iso}\" " + $" -x \"{selectedInput}\""); }
             }
             catch (Exception ex) { DisplayErrorMessage(ex); }
+        }
+
+        private void RunBatch(string delISO, string disXBE, string skipSys)
+        {
+            if (!Directory.Exists(selectedInput))
+            {
+                MessageBox.Show("Batch input must be a folder.", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (Status == SelectedMode.create)
+            {
+                // Cada subpasta imediata vira um ISO dentro da pasta de saida.
+                string[] sourceDirs;
+                try { sourceDirs = Directory.GetDirectories(selectedInput); }
+                catch (Exception ex) { DisplayErrorMessage(ex); return; }
+
+                sourceDirs = sourceDirs
+                    .Where(d => !string.Equals(Path.GetFileName(d), "$SystemUpdate", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(d => d, StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+
+                if (sourceDirs.Length == 0)
+                {
+                    MessageBox.Show($"No subfolders found in:\n{selectedInput}", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                MessageBoxResult confirm = MessageBox.Show($"{sourceDirs.Length} folder(s) found.\n\nCreate one ISO per folder into:\n{selectedOutput}?", "Batch create", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (confirm != MessageBoxResult.Yes) { return; }
+
+                List<string> cmds = new List<string>();
+                HashSet<string> usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (string dir in sourceDirs)
+                {
+                    string baseName = Path.GetFileName(dir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                    if (string.IsNullOrWhiteSpace(baseName)) { baseName = "MyXISO"; }
+                    string target = baseName;
+                    int n = 1;
+                    while (usedNames.Contains(target + ".iso") || File.Exists(Path.Combine(selectedOutput, target + ".iso")))
+                    {
+                        n++;
+                        target = $"{baseName}_{n}";
+                    }
+                    usedNames.Add(target + ".iso");
+                    cmds.Add($"\"{eXISO}\"" + $" {disXBE}" + $" -c \"{dir}\" \"{Path.Combine(selectedOutput, target + ".iso")}\"");
+                }
+                RunXISO(cmds);
+                return;
+            }
+
+            // Rewrite / Extract / List: mapeia todos os .iso ate o ultimo nivel.
+            List<string> isoFiles = SafeFindIsoFiles(selectedInput);
+
+            if (isoFiles.Count == 0)
+            {
+                MessageBox.Show($"No .iso files found (including subfolders) in:\n{selectedInput}", "extract-xiso-gui", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string verb = Status == SelectedMode.extract ? "Extract" : Status == SelectedMode.rewrite ? "Rewrite" : "List";
+            string scope = Status == SelectedMode.list ? $"Input:\n{selectedInput}" : $"Output:\n{selectedOutput}";
+            MessageBoxResult proceed = MessageBox.Show($"{isoFiles.Count} .iso file(s) found (including subfolders).\n\n{verb} them one by one?\n\n{scope}", $"Batch {verb.ToLower()}", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (proceed != MessageBoxResult.Yes) { return; }
+
+            List<string> batchCmds = new List<string>();
+            if (Status == SelectedMode.list)
+            {
+                foreach (string iso in isoFiles)
+                {
+                    batchCmds.Add($"\"{eXISO}\" -l \"{iso}\"");
+                }
+            }
+            else if (Status == SelectedMode.rewrite)
+            {
+                foreach (string iso in isoFiles)
+                {
+                    batchCmds.Add($"\"{eXISO}\"" + $" {delISO} {disXBE} {skipSys}" + $" -d \"{selectedOutput}\" " + $" -r \"{iso}\"");
+                }
+            }
+            else // extract: uma subpasta por ISO dentro do output
+            {
+                HashSet<string> usedDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (string iso in isoFiles)
+                {
+                    string dest = ResolveUniqueDir(selectedOutput, Path.GetFileNameWithoutExtension(iso), usedDirs);
+                    batchCmds.Add($"\"{eXISO}\"" + $" {skipSys}" + $" -d \"{dest}\" " + $" -x \"{iso}\"");
+                }
+            }
+            RunXISO(batchCmds);
+        }
+
+        private static List<string> SafeFindIsoFiles(string root)
+        {
+            List<string> result = new List<string>();
+            Stack<string> dirs = new Stack<string>();
+            dirs.Push(root);
+            while (dirs.Count > 0)
+            {
+                string current = dirs.Pop();
+                string[] subDirs = new string[0];
+                try { subDirs = Directory.GetDirectories(current); }
+                catch { continue; }
+                foreach (string sub in subDirs) { dirs.Push(sub); }
+                string[] files = new string[0];
+                try { files = Directory.GetFiles(current, "*.iso"); }
+                catch { continue; }
+                result.AddRange(files);
+            }
+            result.Sort(StringComparer.OrdinalIgnoreCase);
+            return result;
+        }
+
+        private static string ResolveUniqueDir(string outputRoot, string baseName, HashSet<string> used)
+        {
+            if (string.IsNullOrWhiteSpace(baseName)) { baseName = "MyXISO"; }
+            foreach (char c in Path.GetInvalidFileNameChars()) { baseName = baseName.Replace(c, '_'); }
+            string candidate = Path.Combine(outputRoot, baseName);
+            int n = 1;
+            while (used.Contains(candidate) || Directory.Exists(candidate))
+            {
+                n++;
+                candidate = Path.Combine(outputRoot, $"{baseName}_{n}");
+            }
+            used.Add(candidate);
+            return candidate;
         }
 
         private void BrowseForISO(bool isInput)
@@ -334,15 +494,21 @@ namespace extract_xiso_gui
 
         private void RunXISO(string cmd)
         {
+            RunXISO(new List<string> { cmd });
+        }
+
+        private void RunXISO(List<string> cmds)
+        {
             try
             {
-                string[] finalCMD ={
-                            "@echo off",
-                            "title extract-xiso",
-                            $"{cmd}",
-                            "pause",
-                            "exit"
-                          };
+                List<string> finalCMD = new List<string>
+                {
+                    "@echo off",
+                    "title extract-xiso"
+                };
+                finalCMD.AddRange(cmds);
+                finalCMD.Add("pause");
+                finalCMD.Add("exit");
                 File.WriteAllLines(xisoBat, finalCMD);
                 if (Status == SelectedMode.create || Status == SelectedMode.rewrite || Status == SelectedMode.extract)
                 {

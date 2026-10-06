@@ -11,7 +11,7 @@
         Background="Black"
         AllowsTransparency="True"
         WindowStyle="None"
-        Title="extract-xiso-gui" Height="650" Width="800">
+         Title="extract-xiso-gui" Height="680" Width="800">
     <Grid>
         <Image Source="/Images/XboxBG.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.35">
             <Image.Effect>
@@ -63,10 +63,13 @@
 
                 
                 <Grid Margin="0,20,0,0">
-                    <CheckBox Name="cbDelISO" Content="Delete old ISO" ToolTip="Delete old xiso after processing." VerticalAlignment="Top" Foreground="White"/>
-                    <CheckBox Name="cbAutoXBE" Content="Disable auto .xbe patching" ToolTip="Disable automatic .xbe media enable patching (not recommended)." VerticalAlignment="Center" Foreground="White"/>
-                    <CheckBox Name="cbSkipSys" Content="Skip $SystemUpdate" ToolTip="Skip $SystemUpdate folder." VerticalAlignment="Bottom" Foreground="White"/>
-                    <Button Name="GoBTN" Content="Go!" Click="GoBTN_Click" Width="100" Height="60" IsHitTestVisible="True" HorizontalAlignment="Right" Margin="0,0,0,0"/>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <CheckBox Name="cbBatch" Content="Batch (scan folder + subfolders)" ToolTip="When checked, Input is a folder: all .iso files are found recursively and processed one by one." VerticalAlignment="Top" Foreground="White" Margin="0,0,0,5" Checked="BatchMode_Changed" Unchecked="BatchMode_Changed"/>
+                        <CheckBox Name="cbDelISO" Content="Delete old ISO" ToolTip="Delete old xiso after processing." VerticalAlignment="Top" Foreground="White"/>
+                        <CheckBox Name="cbAutoXBE" Content="Disable auto .xbe patching" ToolTip="Disable automatic .xbe media enable patching (not recommended)." VerticalAlignment="Center" Foreground="White"/>
+                        <CheckBox Name="cbSkipSys" Content="Skip $SystemUpdate" ToolTip="Skip $SystemUpdate folder." VerticalAlignment="Bottom" Foreground="White"/>
+                    </StackPanel>
+                    <Button Name="GoBTN" Content="Go!" Click="GoBTN_Click" Width="100" Height="60" IsHitTestVisible="True" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,0,0"/>
                 </Grid>
             
             </StackPanel>
